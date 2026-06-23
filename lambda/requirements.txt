@@ -1,0 +1,8 @@
+# Runtime dependencies for the Lambdas.
+#
+# In AWS these are supplied by the AWS-managed "AWSSDKPandas-Python311" layer
+# (pandas + pyarrow + numpy), referenced in terraform/lambda.tf — so the
+# deployment zip itself only needs the source files. boto3 is in the Lambda
+# runtime already. Listed here for documentation / local installs.
+pyarrow>=14.0.0
+boto3>=1.34.0

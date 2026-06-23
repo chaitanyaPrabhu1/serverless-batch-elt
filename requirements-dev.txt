@@ -1,0 +1,7 @@
+# Local development + test dependencies (not the Lambda runtime).
+pyarrow>=14.0.0
+boto3>=1.34.0
+pytest>=8.0.0
+moto[s3]>=5.0.0
+# dbt (Athena adapter) — only needed if you build the warehouse from this venv.
+# dbt-athena-community>=1.8.0,<1.9.0

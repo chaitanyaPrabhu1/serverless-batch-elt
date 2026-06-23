@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: stg_weather
+    description: One typed, de-duplicated row per weather observation.
+    columns:
+      - name: observation_id
+        description: Natural key, "<city_id>:<observed_at>".
+        data_tests:
+          - not_null
+          - unique
+      - name: city_id
+        data_tests:
+          - not_null
+      - name: observed_at
+        data_tests:
+          - not_null
+      - name: temperature_c
+        description: Air temperature in degrees Celsius.
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: -90
+              max_value: 60
+      - name: relative_humidity_pct
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+              inclusive: true
+      - name: cloud_cover_pct
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+              inclusive: true
+      - name: wind_direction_deg
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 360
+              inclusive: true
+      - name: is_day
+        data_tests:
+          - accepted_values:
+              values: [0, 1]
+              quote: false

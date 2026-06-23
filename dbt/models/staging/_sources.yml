@@ -1,0 +1,32 @@
+version: 2
+
+sources:
+  - name: weather_lake
+    description: >
+      Clean-zone Parquet written by the transform Lambda and cataloged by the
+      Glue crawler. One row per city per hourly observation.
+    database: awsdatacatalog
+    schema: "{{ env_var('GLUE_DATABASE', 'weather_elt') }}"
+    tables:
+      - name: weather
+        description: Hourly current-weather observations, partitioned by ingest date (dt).
+        # Alert if no new data has landed recently — the pipeline's heartbeat.
+        loaded_at_field: ingested_at
+        freshness:
+          warn_after: { count: 2, period: hour }
+          error_after: { count: 6, period: hour }
+        columns:
+          - name: observation_id
+            description: Natural key, "<city_id>:<observed_at>".
+            data_tests:
+              - not_null
+          - name: city_id
+            data_tests:
+              - not_null
+          - name: observed_at
+            data_tests:
+              - not_null
+          - name: dt
+            description: Ingest-date partition key (string, YYYY-MM-DD).
+            data_tests:
+              - not_null

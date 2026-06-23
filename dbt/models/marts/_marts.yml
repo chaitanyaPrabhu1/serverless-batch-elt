@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: dim_location
+    description: One row per ingested city (the location dimension).
+    columns:
+      - name: city_id
+        description: Primary key.
+        data_tests:
+          - not_null
+          - unique
+      - name: country
+        data_tests:
+          - not_null
+      - name: latitude
+        data_tests:
+          - dbt_utils.accepted_range: { min_value: -90, max_value: 90, inclusive: true }
+      - name: longitude
+        data_tests:
+          - dbt_utils.accepted_range: { min_value: -180, max_value: 180, inclusive: true }
+
+  - name: fct_weather_observation
+    description: Fact table, one row per weather observation (grain = observation_id).
+    columns:
+      - name: observation_id
+        data_tests:
+          - not_null
+          - unique
+      - name: city_id
+        description: FK to dim_location.
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_location')
+              field: city_id
+      - name: observed_at
+        data_tests:
+          - not_null
+      - name: temperature_c
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range: { min_value: -90, max_value: 60 }
+      - name: is_raining
+        data_tests:
+          - not_null
+
+  - name: agg_weather_daily
+    description: Daily per-city weather summary (gold mart).
+    columns:
+      - name: city_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_location')
+              field: city_id
+      - name: observed_date
+        data_tests:
+          - not_null
+      - name: observation_count
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range: { min_value: 1, max_value: 48, inclusive: true }
+      - name: avg_temperature_c
+        data_tests:
+          - not_null
+    # Composite grain must be unique: one row per city per day.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - city_id
+            - observed_date

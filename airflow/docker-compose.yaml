@@ -1,0 +1,35 @@
+# Minimal local Airflow for running the weather_elt DAG.
+# Standalone mode (LocalExecutor + SQLite) — fine for a portfolio/demo, not prod.
+#
+#   docker compose up -d        ->  UI at http://localhost:8080  (admin / admin)
+#
+# Provide AWS creds + config via a .env file next to this compose file:
+#   AWS_ACCESS_KEY_ID=...   AWS_SECRET_ACCESS_KEY=...   AWS_REGION=us-east-1
+#   DATA_BUCKET=...  GLUE_DATABASE=weather_elt  GLUE_CRAWLER=weather-elt-crawler
+#   INGEST_LAMBDA=weather-elt-ingest  TRANSFORM_LAMBDA=weather-elt-transform
+#   ATHENA_WORKGROUP=weather_elt
+services:
+  airflow:
+    image: apache/airflow:2.9.3-python3.11
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+      _AIRFLOW_DB_MIGRATE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin
+      DBT_DIR: /opt/airflow/dbt
+      _PIP_ADDITIONAL_REQUIREMENTS: "dbt-athena-community==1.8.* boto3"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ../dbt:/opt/airflow/dbt
+      - airflow_db:/opt/airflow
+    ports:
+      - "8080:8080"
+    command: standalone
+
+volumes:
+  airflow_db:

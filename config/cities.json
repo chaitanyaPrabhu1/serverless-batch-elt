@@ -1,0 +1,12 @@
+[
+  { "city_id": "london",       "city_name": "London",        "country": "GB", "latitude": 51.5074, "longitude": -0.1278,   "timezone": "Europe/London" },
+  { "city_id": "new_york",     "city_name": "New York",      "country": "US", "latitude": 40.7128, "longitude": -74.0060,  "timezone": "America/New_York" },
+  { "city_id": "tokyo",        "city_name": "Tokyo",         "country": "JP", "latitude": 35.6762, "longitude": 139.6503,  "timezone": "Asia/Tokyo" },
+  { "city_id": "sydney",       "city_name": "Sydney",        "country": "AU", "latitude": -33.8688,"longitude": 151.2093,  "timezone": "Australia/Sydney" },
+  { "city_id": "sao_paulo",    "city_name": "Sao Paulo",     "country": "BR", "latitude": -23.5505,"longitude": -46.6333,  "timezone": "America/Sao_Paulo" },
+  { "city_id": "cape_town",    "city_name": "Cape Town",     "country": "ZA", "latitude": -33.9249,"longitude": 18.4241,   "timezone": "Africa/Johannesburg" },
+  { "city_id": "mumbai",       "city_name": "Mumbai",        "country": "IN", "latitude": 19.0760, "longitude": 72.8777,   "timezone": "Asia/Kolkata" },
+  { "city_id": "berlin",       "city_name": "Berlin",        "country": "DE", "latitude": 52.5200, "longitude": 13.4050,   "timezone": "Europe/Berlin" },
+  { "city_id": "moscow",       "city_name": "Moscow",        "country": "RU", "latitude": 55.7558, "longitude": 37.6173,   "timezone": "Europe/Moscow" },
+  { "city_id": "reykjavik",    "city_name": "Reykjavik",     "country": "IS", "latitude": 64.1466, "longitude": -21.9426,  "timezone": "Atlantic/Reykjavik" }
+]

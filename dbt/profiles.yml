@@ -1,0 +1,18 @@
+# dbt-athena profile. Values come from Terraform outputs (see terraform/outputs.tf).
+# Env vars let the same profile work locally and in Airflow/CI without edits.
+weather_elt:
+  target: prod
+  outputs:
+    prod:
+      type: athena
+      # S3 location Athena writes query results to (a dedicated prefix).
+      s3_staging_dir: "s3://{{ env_var('DATA_BUCKET') }}/athena-results/"
+      # Where dbt materializes tables/views in the lake.
+      s3_data_dir: "s3://{{ env_var('DATA_BUCKET') }}/warehouse/"
+      s3_data_naming: schema_table
+      region_name: "{{ env_var('AWS_REGION', 'us-east-1') }}"
+      database: awsdatacatalog
+      # Glue database that holds the crawled source + dbt-built models.
+      schema: "{{ env_var('GLUE_DATABASE', 'weather_elt') }}"
+      work_group: "{{ env_var('ATHENA_WORKGROUP', 'weather_elt') }}"
+      threads: 4

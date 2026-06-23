@@ -1,0 +1,33 @@
+name: weather_elt
+version: "1.0.0"
+config-version: 2
+
+profile: weather_elt
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+snapshot-paths: ["snapshots"]
+
+target-path: target
+clean-targets:
+  - target
+  - dbt_packages
+
+# Default materializations per layer. dbt-athena writes results back to S3 and
+# registers them in the Glue Data Catalog.
+models:
+  weather_elt:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts
+      +format: parquet
+
+vars:
+  # A row is "stale" if its newest observation is older than this many hours.
+  weather_freshness_hours: 3
